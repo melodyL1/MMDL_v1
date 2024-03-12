@@ -1,6 +1,6 @@
 import os
 from PyQt5.QtCore import Qt
-from PyQt5.QtWidgets import QMessageBox, QApplication, QMainWindow, QMenu, QAction, QVBoxLayout, QWidget, QDockWidget, QLabel, QFileDialog, QListWidget, QTextEdit, QDialog, QLabel, QLineEdit, QPushButton
+from PyQt5.QtWidgets import QComboBox, QMessageBox, QApplication, QMainWindow, QMenu, QAction, QVBoxLayout, QWidget, QDockWidget, QLabel, QFileDialog, QListWidget, QTextEdit, QDialog, QLabel, QLineEdit, QPushButton
 from PyQt5.QtGui import QPixmap, QImage
 from PyQt5 import QtGui
 from osgeo import gdal
@@ -143,7 +143,7 @@ class GenerateDatasetDialog(QDialog):
         self.setGeometry(200, 200, 400, 300)
 
         # 创建参数输入框和选择按钮
-        self.model_edit = QLineEdit(self)
+        # self.model_edit = QLineEdit(self)
         self.dataset_edit = QLineEdit(self)
         self.data_edit = QLineEdit(self)
         self.y_edit = QLineEdit(self)
@@ -153,6 +153,11 @@ class GenerateDatasetDialog(QDialog):
 
         self.validation_percent_edit = QLineEdit(self)
         self.train_percent_edit = QLineEdit(self)
+
+        # 创建下拉列表按钮
+        self.model_combobox = QComboBox(self)
+        self.model_combobox.addItems(
+            ["RF", "1D CNN", "2D CNN", "3D CNN", "VGG 16", "HybridSN", "ViT", "SSTN", "SSFTTnet", "TransHSI", "HRN"])
 
         # 创建选择文件按钮
         self.data_button = QPushButton("选择文件", self)
@@ -192,7 +197,7 @@ class GenerateDatasetDialog(QDialog):
 
         layout = QVBoxLayout(self)
         layout.addWidget(QLabel("Model：", self))
-        layout.addWidget(self.model_edit)
+        layout.addWidget(self.model_combobox)
         layout.addWidget(QLabel("Project name：", self))
         layout.addWidget(self.dataset_edit)
         layout.addWidget(QLabel("Data：", self))
@@ -222,7 +227,8 @@ class GenerateDatasetDialog(QDialog):
 
     def start_generation(self):
         # 获取输入框中的参数
-        model = self.model_edit.text()
+        model = self.model_combobox.currentText()
+        print(model)
         dataset = self.dataset_edit.text()
         data = self.data_edit.text()
         y = self.y_edit.text()
